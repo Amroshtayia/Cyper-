@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Terminal, Cpu, ArrowRight } from "lucide-react";
+import { Terminal, Cpu, ArrowRight, Star, BookOpen } from "lucide-react";
 import { toolsData, ToolCategory, OSType } from "@/data/tools";
 import { categoriesData } from "@/data/categories";
 import { Navbar } from "@/components/Navbar";
@@ -102,11 +102,39 @@ export default function Home() {
 
       <main className="flex-1 flex flex-col gap-20 py-16 container mx-auto px-4 max-w-7xl">
         
+        {/* Quick-access cards */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 -mt-4">
+          <Link href="/featured">
+            <div className="glass-card card-glow group rounded-2xl p-6 flex items-center gap-5 cursor-pointer hover:border-primary/40 transition-all duration-200">
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 border border-primary/25 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <Star className="w-6 h-6 text-primary" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-bold text-base text-foreground group-hover:text-primary transition-colors">Featured Tools</p>
+                <p className="text-sm text-muted-foreground mt-0.5">Hand-picked essential tools for security professionals</p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-primary ml-auto flex-shrink-0 transition-colors" />
+            </div>
+          </Link>
+          <Link href="/learning">
+            <div className="glass-card card-glow group rounded-2xl p-6 flex items-center gap-5 cursor-pointer hover:border-primary/40 transition-all duration-200">
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-400/10 border border-purple-400/25 flex items-center justify-center group-hover:bg-purple-400/20 transition-colors">
+                <BookOpen className="w-6 h-6 text-purple-400" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-bold text-base text-foreground group-hover:text-purple-400 transition-colors">Learning Center</p>
+                <p className="text-sm text-muted-foreground mt-0.5">Cybersecurity fundamentals, networking, and tool guides</p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-purple-400 ml-auto flex-shrink-0 transition-colors" />
+            </div>
+          </Link>
+        </section>
+
         {/* Featured Tools */}
         <section>
           <div className="flex items-center justify-between mb-8">
             <h2 className="section-header">Featured Tools</h2>
-            <Link href="/tools" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors">
+            <Link href="/featured" className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1 transition-colors">
               View all <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -162,7 +190,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <Terminal className="w-4 h-4 text-primary/60" />
             <span>
-              <span className="text-foreground font-semibold">Cyber Tools Hub</span> — Educational cybersecurity installation guide only.
+              <span className="text-foreground font-semibold">Cyber Tools Hub</span> — Educational cybersecurity tools &amp; learning platform.
             </span>
           </div>
           <span className="opacity-70">© {new Date().getFullYear()} All rights reserved.</span>

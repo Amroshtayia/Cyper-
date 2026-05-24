@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ChevronDown, ExternalLink, Shield, Terminal } from "lucide-react";
+import { ChevronDown, ExternalLink, Shield, Terminal, ArrowRight } from "lucide-react";
 import { Tool, OSType } from "@/data/tools";
 import { categoriesData } from "@/data/categories";
 import { CommandBlock } from "./CommandBlock";
@@ -151,6 +152,17 @@ export function ToolCard({ tool, selectedOS, showAllOS = false, index }: ToolCar
           </div>
         </CollapsibleContent>
       </Collapsible>
+
+      {/* View Details Link */}
+      <Link href={`/tool/${tool.id}`}>
+        <div
+          className="flex items-center justify-between w-full px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 border border-transparent hover:border-primary/20 transition-all duration-200 cursor-pointer mt-1"
+          data-testid={`link-detail-${tool.id}`}
+        >
+          <span>View Full Details</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </div>
+      </Link>
     </motion.div>
   );
 }
