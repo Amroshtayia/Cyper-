@@ -128,3 +128,18 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.hero-gradient {
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 240, 255, 0.08) 0%, transparent 70%);
+}
+
+.glow-text {
+  text-shadow: 0 0 30px rgba(0, 240, 255, 0.4), 0 0 60px rgba(0, 240, 255, 0.15);
+}
