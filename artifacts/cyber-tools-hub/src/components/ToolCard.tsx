@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, ExternalLink, Shield, Terminal } from "lucide-react";
 import { Tool, OSType } from "@/data/tools";
@@ -41,25 +41,25 @@ export function ToolCard({ tool, selectedOS, showAllOS = false, index }: ToolCar
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.28, delay: index * 0.045 }}
-      whileHover={{ y: -3, scale: 1.015 }}
-      className="bg-card border border-border rounded-xl p-5 flex flex-col gap-4 cursor-default
-                 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(0,240,255,0.12)]
-                 transition-colors duration-300 group"
+      exit={{ opacity: 0, scale: 0.96 }}
+      transition={{ duration: 0.2 }}
+      whileHover={{ y: -4, scale: 1.02 }}
+      className="glass-card card-glow relative overflow-hidden rounded-xl p-5 flex flex-col gap-4 cursor-default group"
       data-testid={`card-tool-${tool.id}`}
     >
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+      <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-primary/40 shadow-[0_0_8px_rgba(0,240,255,0.8)]" />
+
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 min-w-0">
-          <div className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+          <div className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg bg-primary/10 border border-primary/25 shadow-[0_0_12px_rgba(0,240,255,0.15)] flex items-center justify-center">
             <Shield className="w-4 h-4 text-primary" />
           </div>
           <div className="min-w-0">
-            <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors duration-200 leading-tight">
+            <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-200 leading-tight">
               {tool.name}
             </h3>
             <span className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold border ${colors.badge}`}>
@@ -99,7 +99,7 @@ export function ToolCard({ tool, selectedOS, showAllOS = false, index }: ToolCar
           >
             <span className="flex items-center gap-2">
               <Terminal className="w-3.5 h-3.5" />
-              View Install Commands
+              View Installation Commands
             </span>
             <ChevronDown
               className={`w-4 h-4 transition-transform duration-200 ${installOpen ? "rotate-180" : ""}`}
@@ -108,7 +108,6 @@ export function ToolCard({ tool, selectedOS, showAllOS = false, index }: ToolCar
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="mt-3 flex flex-col gap-3">
-            {/* OS mini-tabs (shown in "All" mode or always) */}
             <div className="flex gap-1 flex-wrap">
               {OS_TABS.map((os) => (
                 <button

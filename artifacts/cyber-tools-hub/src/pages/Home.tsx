@@ -1,13 +1,15 @@
-import React, { useState, useMemo } from "react";
-import { Terminal, Search, Shield, Cpu } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo, useEffect } from "react";
+import { Terminal, Shield, Cpu } from "lucide-react";
 import { toolsData, ToolCategory, OSType } from "@/data/tools";
-import { ToolCard } from "@/components/ToolCard";
+import { Navbar } from "@/components/Navbar";
+import { FilterTabs } from "@/components/FilterTabs";
+import { SearchBar } from "@/components/SearchBar";
+import { ToolGrid } from "@/components/ToolGrid";
 
 const CATEGORIES: ("All" | ToolCategory)[] = ["All", "Network", "Web", "Forensics", "Recon", "Passwords"];
 const OS_OPTIONS: ("All" | OSType)[] = ["All", "Linux", "Debian/Ubuntu", "Arch", "Termux"];
 
-const OS_LABELS: Record<string, string> = {
+const OS_LABELS: Record<"All" | OSType, string> = {
   "All": "All Tools",
   "Linux": "Linux",
   "Debian/Ubuntu": "Debian / Ubuntu",
@@ -22,6 +24,12 @@ export default function Home() {
   const [selectedOS, setSelectedOS] = useState<"All" | OSType>("All");
   const [selectedCategory, setSelectedCategory] = useState<"All" | ToolCategory>("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoading(false), 600);
+    return () => clearTimeout(t);
+  }, []);
 
   const filteredTools = useMemo(() => {
     return toolsData.filter((tool) => {
@@ -44,6 +52,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans dark">
+      <Navbar />
+
       {/* Hero */}
       <header className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 grid-bg pointer-events-none" />
@@ -62,10 +72,6 @@ export default function Home() {
             <p className="text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed">
               Installer Edition — Ethical Cybersecurity Tools Installer Guide
             </p>
-            <div className="flex items-center gap-2 text-xs text-amber-400/80 border border-amber-400/20 bg-amber-400/5 px-4 py-2 rounded-full">
-              <Shield className="w-3.5 h-3.5" />
-              For educational and authorized testing use only.
-            </div>
             <div className="flex items-center gap-6 pt-2 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Cpu className="w-4 h-4 text-primary/60" />
@@ -80,41 +86,17 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Controls */}
-      <div className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border">
+      {/* Sticky controls */}
+      <div className="sticky top-16 z-40 bg-background/95 backdrop-blur border-b border-border">
         <div className="container mx-auto px-4 max-w-6xl py-4 flex flex-col gap-4">
-
-          {/* OS Tabs + Search row */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Operating System">
-              {OS_OPTIONS.map((os) => (
-                <button
-                  key={os}
-                  role="tab"
-                  aria-selected={selectedOS === os}
-                  onClick={() => setSelectedOS(os as "All" | OSType)}
-                  data-testid={`tab-os-${os}`}
-                  className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
-                    selectedOS === os
-                      ? "bg-primary text-primary-foreground shadow-[0_0_14px_rgba(0,240,255,0.35)]"
-                      : "bg-card border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                  }`}
-                >
-                  {OS_LABELS[os]}
-                </button>
-              ))}
-            </div>
-            <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search by name, category, or OS..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-card border border-border rounded-lg py-2 pl-9 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all placeholder:text-muted-foreground/50"
-                data-testid="input-search-tools"
-              />
-            </div>
+            <FilterTabs
+              selectedOS={selectedOS}
+              onOSChange={setSelectedOS}
+              options={OS_OPTIONS}
+              labels={OS_LABELS}
+            />
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
           </div>
 
           {/* Category filters + result count */}
@@ -145,34 +127,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Tools Grid */}
       <main className="flex-1 container mx-auto px-4 py-10 max-w-6xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <AnimatePresence mode="popLayout">
-            {filteredTools.length > 0 ? (
-              filteredTools.map((tool, idx) => (
-                <ToolCard
-                  key={`${tool.id}-${selectedOS}`}
-                  tool={tool}
-                  selectedOS={selectedOS === "All" ? "Linux" : selectedOS}
-                  showAllOS={selectedOS === "All"}
-                  index={idx}
-                />
-              ))
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="col-span-full py-20 text-center text-muted-foreground"
-              >
-                <Terminal className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                <p className="text-base">No tools found matching your criteria.</p>
-                <p className="text-sm mt-1 opacity-60">Try adjusting the OS, category, or search query.</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        <ToolGrid tools={filteredTools} selectedOS={selectedOS} isLoading={isLoading} />
       </main>
 
       {/* Footer */}
